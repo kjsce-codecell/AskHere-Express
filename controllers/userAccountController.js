@@ -49,7 +49,7 @@ const userAccountController = {
           }
     } catch(error) {
         // return next(CustomErrorHandler.serverError(error.message));
-        return res.json({code: false, data: "notSaved", context: 0, emailExists: false, error});
+        return res.json({code: false, data: "notSaved", context: 1, emailExists: false, error});
     }
     
         const userAuth = await bcrypt.compare(password, userData.password);
@@ -68,11 +68,26 @@ const userAccountController = {
             saveKey = await user.save();
         } catch(error) {
         //   return next(CustomErrorHandler.serverError(error));
-            return res.json({code: false, data: "notSaved", context: 0, emailExists: false, error: error});
+            return res.json({code: false, data: "notSaved", context: 1, emailExists: false, error: error});
         }
 
     res.status(200).json({code: true, data: "matched", context: 1, sessionKey, emailExists: true});
- }
+    },
+
+    async logoutUser(req, res, next) {
+        const { sessionKey } = req.body;
+        if (!sessionKey) return res.json({code: false, data: "notMatched", context: 1, emailExists: false, error: "Void Entries Provided"});
+      
+            let saveKey;
+            try {
+                saveKey = await SessionKeys.findOneAndDelete({sessionKey});
+            } catch(error) {
+            //   return next(CustomErrorHandler.serverError(error));
+                return res.json({code: false, data: "notSaved", context: 2, emailExists: true, error: error});
+            }
+    
+        res.status(200).json({code: true, data: "matched", context: 2, emailExists: true});
+        }
 }
 
 export default userAccountController;

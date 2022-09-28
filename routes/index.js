@@ -11,6 +11,7 @@ Router.get('/', (req, res) => {
 
 Router.post('/api/saveUserData', [], userAccountController.saveUserData);
 Router.post('/api/loginAccount', [], userAccountController.loginUser);
+Router.post('/api/logoutAccount', [], userAccountController.logoutUser);
 // Router.post('/api/createForm', []);
 // Router.post('/api/showFormData', []);
 // Router.post('/api/showFormFill', []);
