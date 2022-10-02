@@ -1,6 +1,6 @@
 
 
-<h1 align="center">Ask Here Express</h1>
+<h1 align="center">AskHere (Backend Developed using Node.js, Express & MongoDB)</h1>
 
 <div align="center">
 
@@ -12,7 +12,6 @@
 
 ---
 
-
 ## Run Locally
 
 First, clone the repository
@@ -21,7 +20,7 @@ First, clone the repository
 git clone https://github.com/kjsce-codecell/AskHere-Express
 ```
 
-Move to the folder
+Move to the Folder
 
 ```sh
 cd AskHere-Express
@@ -41,25 +40,28 @@ npm run dev
 
 ## Dependencies
 
-- [Expressjs](https://expressjs.com/) - The server for handling and routing HTTP requests
-- [Mongoose](https://mongoosejs.com/) - For modeling and mapping MongoDB data to javascript.
-- [EJS](https://ejs.co/) - For making Embedded JavaScript templates and generating similar pages using templates.
-- [Dotenv](https://www.npmjs.com/package/dotenv) - Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env. Storing configuration in the environment separate from code is based on The Twelve-Factor App methodology. 
-- [bcrypt](https://www.npmjs.com/package/bcrypt) - A library to help you hash passwords.
-- [esm](https://www.npmjs.com/package/esm?activeTab=readme) - The brilliantly simple, babel-less, bundle-less ECMAScript module loader.
-- [uuid](https://www.npmjs.com/package/uuid) - It is a secure way to generate cryptographically strong unique identifiers with Node.js that doesn't require a large amount of code
+- [expressjs](https://expressjs.com/) - The Server File for handling and routing HTTP Requests.
+- [mongoose](https://mongoosejs.com/) - For modeling and mapping MongoDB data to Javascript.
+- [ejs](https://ejs.co/) - For making Embedded JavaScript Templates and generating similar pages using templates.
+- [dotenv](https://www.npmjs.com/package/dotenv) - Dotenv is a zero-dependency module that loads Environment Variables from a .env file into process.env. Storing configuration in the environment separate from code is based on The Twelve-Factor App methodology. 
+- [bcrypt](https://www.npmjs.com/package/bcrypt) - A library to help you hash Passwords.
+- [esm](https://www.npmjs.com/package/esm?activeTab=readme) - The brilliantly simple, babel-less, bundle-less ECMAScript Module Loader.
+- [uuid](https://www.npmjs.com/package/uuid) - It is a secure way to generate Cryptographically Strong Unique Identifiers with Node.js that doesn't require a large amount of Code.
+
 ## Application Structure
 
-- `app.js` - The entry point to our application. This file defines our express server and connects it to MongoDB using mongoose. It also requires the routes and models we'll be using in the application.
+- `server.js` - The entry point to our application. This file defines our express server and connects it to MongoDB using mongoose. It also requires the routes and models we'll be using in the application.
+- `controllers/` - This folder contains the behaivour for different API calls at different routes.
 - `routes/` - This folder contains the route definitions for our API.
-- `config/` - This folder contains configuration for passport as well as a central location for configuration/environment variables.
-- `models/` - This folder contains the schema definitions for our Mongoose models.
+- `config/` - This folder contains configuration for Passport as well as a Central Location for Configuration/Environment Variables.
+- `models/` - This folder contains the schema definitions for our Mongoose Models.
+
 ## Error Handling
 
-In `routes/api/index.js`, we define a error-handling middleware for handling Mongoose's `ValidationError`. This middleware will respond with a 422 status code and format the response to have [error messages the clients can understand](https://github.com/gothinkster/realworld/blob/master/API.md#errors-and-status-codes)
+In `middlewares/errorHandler.js`, we define a error-handling middleware `errorHandler` in addition with `CustomErrorHandler` at `services/CustomErrorHandler.js`. This middleware will respond with appropriate status code according to request status and format the response to have [error messages the clients can understand](https://github.com/gothinkster/realworld/blob/master/API.md#errors-and-status-codes)
 ## API Reference
 
-##### Note: Every Request API Call is of POST type.
+#### Every Request API Call is of `POST` Type.
 
 ### saveUserData
 
@@ -69,37 +71,28 @@ Saves user data while registering account
   /api/saveUserData
 ```
 
-| Request | Request Success     | Request Fail |
-| :-------- | :------- | :------------------------- |
-| `{name, email, password} ` | `{code: true, data: saved, context: 0, emailExists: false} ` | `{code: true, data: “notSaved”, context: 0, emailExists: true, error: errorMessage} ` |
-
-
 ### loginAccount
 
-It verifies the login details and redirect to dashboard if request is authenticated 
+It verifies the Login Details and redirects to Dashboard if Request is truly authenticated. 
 
 ```http
   /api/loginAccount
 ```
 
-| Request | Request Success     | Request Fail |
-| :-------- | :------- | :------------------------- |
-| `{email, password} ` | `{code: true, data: “matched”, context: 1, sessionKey, emailExists: true } ` | `{code: false, data: “notMatched”, context: 1, emailExists: ture} ` |
-
 ### createForm
 
-When a User creates form,this API saves the form information like form name, form des, form questions, question’s options etc.. 
+When a User creates a Form, this API saves the Form Information like Form Name, Form Description, Form Questions, Question’s Options/Fields, etc.. 
 
 ```http
   /api/createForm
 ```
 
-| Request | Request Success     | Request Fail |
-| :-------- | :------- | :------------------------- |
-| `{name, email, password} ` | `{code: true, data: saved, context: 0, emailExists: false} ` | `{code: true, data: “notSaved”, context: 0, emailExists: true, error: errorMessage} ` |
-
 ### showFormFill
 Client side : Same response as above.
+
+```http
+  /api/showFormFill
+```
 
 ### saveUserData
 
@@ -109,21 +102,13 @@ Saves user data while registering account
   /api/saveUserData
 ```
 
-| Request | Request Success     | Request Fail |
-| :-------- | :------- | :------------------------- |
-| `{sessionKey, name, description,questions: [{type: “choice”,title,options: [“hello1”]}` | `{code: true, key: matched, context: 3}` | `{code: false, key: “notMatched”, context: 3, error: errorMessage}  ` |
-
 ### showFormData
 
-This API allows the form host can see the form repsonses and details of the filled form by clients 
+This API allows the Form Host to see the Form Repsonses and Details of the Filled Forms by Clients. 
 
 ```http
   /api/showFormData
 ```
-
-| Request | Request Success     | Request Fail |
-| :-------- | :------- | :------------------------- |
-| ` {sessionKey, formUID} ` | `{code: true, key: matched, context: 4, formData} ` | `{code: false, key: “matched”, context: 4, error: errorMessage} ` |
 
 ### updateForm
 
@@ -134,28 +119,26 @@ API allowws the user to update the form witht he modified details.
 ```
 ### getAccountData
 
-API gets the user details like email id and name for the form history
+API gets the User Details like Email ID and Name & all Form History.
 
 ```http
   /api/getAccountData
 ```
 ### logoutAccount
 
-Logs out the user from the current session and suspends the current session key.
+Logs out the User from the Current Session and suspends the current Session Key.
 
 ```http
   /api/logoutAccount
 ```
 
-
-## Contributing
+## Contribution
 
 Contributions are always welcome!
 
-See `contributing.md` for ways to get started.
+See `CONTRIBUTING.md` for ways to get started.
 
-Please adhere to this project's `code of conduct`.
-
+Please adhere to this project's `Code of Conduct`.
 
 ## License
 
