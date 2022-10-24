@@ -15,7 +15,7 @@ const userAccountController = {
             }
       } catch(error) {
           return next(CustomErrorHandler.serverError(error.message));
-          return res.json({code: false, data: "notSaved", context: 0, emailExists: false, error});
+        //   return res.json({code: false, data: "notSaved", context: 0, emailExists: false, error});
       }
       
       const saltRounds = 10;
@@ -80,14 +80,19 @@ const userAccountController = {
       
             let saveKey;
             try {
-                saveKey = await SessionKeys.findOneAndDelete({sessionKey});
+                // saveKey = await SessionKeys.findOneAndDelete({sessionKey});
+                saveKey = await SessionKeys.deleteOne({sessionKey});
             } catch(error) {
             //   return next(CustomErrorHandler.serverError(error));
-                return res.json({code: false, data: "notSaved", context: 2, emailExists: true, error: error});
+                return res.json({code: false, data: "matched", context: 2, emailExists: true, error: error});
             }
     
         res.status(200).json({code: true, data: "matched", context: 2, emailExists: true});
-        }
+    },
+
+    async getUserData(req, res, next) {
+        
+    }
 }
 
 export default userAccountController;
